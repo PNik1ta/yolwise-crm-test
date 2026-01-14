@@ -1,5 +1,15 @@
 node_modules
-# Keep environment variables out of version control
+
+# Ignore real env files
 .env
+.env.local
+.env.test
+.env.docker
+
+# Keep example env templates in git
+!.env.example
+!.env.test.example
+!.env.docker.example
+!.env.local.example
 
 /generated/prisma
