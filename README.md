@@ -40,6 +40,50 @@ yolwise-crm-test/
 
 ---
 
+## Why Prisma + PostgreSQL?
+
+- Prisma + PostgreSQL give
+  - Strong TypeScript types for the DB layer
+  - Very quick iteration on schema + migrations
+  - A clean way to split domain logic into modules later (`users`, customers, bookings, etc.)
+
+---
+
+## Auth decisions
+
+- JWT is stored in an **HttpOnly cookie**:
+  - Safer than localStorage (no direct JS access)
+  - Nice DX for frontend – no need to manually attach token
+- Also supports **Bearer** token in `Authorization` header, which is useful for:
+  - Future integrations
+  - API clients or mobile apps
+
+---
+
+## Migrations & test DB:
+
+- There’s a separate **test database/schema** for Jest e2e tests:
+  - Tests can safely call `prisma.user.deleteMany()` without touching real data.
+  - This pattern scales to more domains (clear separation for `test` environment).
+
+---
+
+## Testing
+
+- **Jest + Supertest** for backend:
+  - e2e tests for auth:
+    - registration (including password + fullName validation)
+    - login
+    - rate limiting
+    - access control for `/api/users`
+  - unit tests for password strength helper
+- This is enough to show how I think about testing strategy:
+  - Critical flows get e2e coverage
+  - Pure logic (helpers/validators) get unit tests
+  - More tests can be added per domain as the CRM grows
+
+---
+
 ## Run with Docker (recommended)
 
 From project root:
@@ -50,7 +94,8 @@ docker compose up --build
 
 - API: http://localhost:4000
 - Swagger: http://localhost:4000/docs
-- (Backend uses env from backend/.env.docker)
+- Frontend: http://localhost:3000
+- (Backend uses env from backend/.env.docker; frontend talks to backend via NEXT_PUBLIC_API_URL)
 
 ---
 
@@ -91,7 +136,7 @@ npm run dev
 
 - Frontend: http://localhost:3000
 - `/login` — login/register page
-- `/` — protected users list (redirects to `/login` if not authenticated)
+- / — protected users list + welcome message (Welcome <Full Name>! To logout click here) (redirects to /login if not authenticated)
 
 ---
 
@@ -103,6 +148,7 @@ npm run dev
 
 # frontend
 - cp frontend/.env.local.example frontend/.env.local
+- cp frontend/.env.docker.example frontend/.env.docker
 
 ---
 
@@ -111,7 +157,7 @@ npm run dev
 Base URL: `http://localhost:4000`
 
 - `GET /docs` — Swagger UI
-- `POST /api/auth/register` — register user
+- `POST /api/auth/register` — register user, returns user data and sets HttpOnly cookie token
 - `POST /api/auth/login` — login, sets HttpOnly cookie `token`
 - `POST /api/auth/logout` — clear auth cookie
 - `GET /api/users` — list users (requires cookie or Bearer token)
@@ -124,4 +170,5 @@ Auth endpoints are rate-limited.
 
 - Tests use a separate Postgres schema (configured via .env.test).
 - Frontend talks to backend with `credentials: "include"` to send HttpOnly cookies.
+- Both backend and frontend can be run together via `docker compose up --build.`
 
