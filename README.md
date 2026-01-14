@@ -96,12 +96,12 @@ npm run dev
 
 ## Environments
 # backend
-cp backend/.env.example backend/.env - using for local running
-cp backend/.env.test.example backend/.env.test - using for tests running
-cp backend/.env.docker.example backend/.env.docker - using for docker running
+- cp backend/.env.example backend/.env - using for local running
+- cp backend/.env.test.example backend/.env.test - using for tests running
+- cp backend/.env.docker.example backend/.env.docker - using for docker running
 
 # frontend
-cp frontend/.env.local.example frontend/.env.local
+- cp frontend/.env.local.example frontend/.env.local
 
 ---
 
