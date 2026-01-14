@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: yolwise-db
+    env_file:
+      - ./backend/.env.docker
+    ports:
+      - "5432:5432"
+    volumes:
+      - yolwise_pg_data:/var/lib/postgresql/data
+
+  api:
+    build: ./backend
+    container_name: yolwise-api
+    env_file:
+      - ./backend/.env.docker
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+
+volumes:
+  yolwise_pg_data:
