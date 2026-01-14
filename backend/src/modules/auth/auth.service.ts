@@ -16,7 +16,7 @@ export class AuthService {
 		}
 
 		if (!isPasswordStrong(dto.password)) {
-			throw new AppError(400, "Password does not meet complexity requirements");
+			throw new AppError(400, "Password must contains min 4 symbols, 1 capitalize letter, 1 digit and 1 special symbol");
 		}
 
 		const existing = await prisma.user.findUnique({
