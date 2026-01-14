@@ -15,10 +15,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					<header className="app-header">
 						<div className="app-header-inner">
 							<h1>Yolwise CRM Test</h1>
-							<nav>
-								<Link href="/">Users</Link>
-								<Link href="/login">Login</Link>
-							</nav>
 						</div>
 					</header>
 					<main className="app-main">{children}</main>
