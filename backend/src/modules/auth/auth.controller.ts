@@ -4,8 +4,15 @@ import { authService } from "./auth.service";
 export class AuthController {
 	async register(req: Request, res: Response, next: NextFunction) {
 		try {
-			const user = await authService.register(req.body);
-			res.status(201).json(user);
+			const { user, token } = await authService.register(req.body);
+
+			res
+				.cookie("token", token, {
+					httpOnly: true,
+					sameSite: "lax",
+				})
+				.status(201)
+				.json(user);
 		} catch (err) {
 			next(err);
 		}

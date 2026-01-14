@@ -28,6 +28,7 @@ describe("Auth flows", () => {
 			fullName: "Test User",
 		});
 		expect(res.body).not.toHaveProperty("passwordHash");
+		expect(res.headers["set-cookie"]).toBeDefined(); // 🔥 теперь и это
 	});
 
 	it("rejects duplicate email on register", async () => {

@@ -47,7 +47,11 @@ export class AuthService {
 			},
 		});
 
-		return user;
+		const token = jwt.sign({ userId: user.id }, env.jwtSecret, {
+			expiresIn: env.jwtExpiresIn,
+		} as SignOptions);
+
+		return { user, token };
 	}
 
 	async login(dto: LoginDto) {
