@@ -3,18 +3,16 @@ import jwt, { SignOptions } from "jsonwebtoken";
 import { prisma } from "../../config/prisma";
 import { env } from "../../config/env";
 import type { LoginDto, RegisterDto } from "./auth.types";
-import { AppError, isPasswordStrong } from "../../utils";
+import { AppError, assertRequiredFields, isEmailValid, isPasswordStrong } from "../../utils";
 
 const SALT_ROUNDS = 10;
 
 export class AuthService {
 	async register(dto: RegisterDto) {
-		const existing = await prisma.user.findUnique({
-			where: { email: dto.email },
-		});
+		assertRequiredFields(dto, ["email", "password", "fullName"]);
 
-		if (existing) {
-			throw new AppError(400, "User with this email already exists");
+		if (!isEmailValid(dto.email)) {
+			throw new AppError(400, "Email is invalid");
 		}
 
 		if (!isPasswordStrong(dto.password)) {
@@ -22,6 +20,14 @@ export class AuthService {
 				400,
 				"Password does not meet complexity requirements"
 			);
+		}
+
+		const existing = await prisma.user.findUnique({
+			where: { email: dto.email },
+		});
+
+		if (existing) {
+			throw new AppError(400, "User with this email already exists");
 		}
 
 		const passwordHash = await bcrypt.hash(dto.password, SALT_ROUNDS);
@@ -44,6 +50,12 @@ export class AuthService {
 	}
 
 	async login(dto: LoginDto) {
+		assertRequiredFields(dto, ["email", "password"]);
+
+		if (!isEmailValid(dto.email)) {
+			throw new AppError(400, "Email is invalid");
+		}
+
 		const user = await prisma.user.findUnique({
 			where: { email: dto.email },
 		});
