@@ -55,6 +55,10 @@ body {
 	max-width: 960px;
 	margin: 24px auto;
 	padding: 0 16px 32px;
+
+	@media screen and (max-width: 350px) {
+		padding: 0 0px 32px;
+	}
 }
 
 .auth-page {
@@ -127,6 +131,8 @@ body {
 	border: none;
 	cursor: pointer;
 	font-size: 14px;
+	width: 100%;
+	margin-top: 12px;
 }
 
 .primary-btn {
