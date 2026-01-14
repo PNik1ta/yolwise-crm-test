@@ -16,7 +16,6 @@ const swaggerDefinition: OpenAPIV3.Document = {
 	],
 	components: {
 		securitySchemes: {
-			// мы поддерживаем и cookie, и Bearer
 			cookieAuth: {
 				type: "apiKey",
 				in: "cookie",
@@ -34,8 +33,18 @@ const swaggerDefinition: OpenAPIV3.Document = {
 				required: ["email", "password", "fullName"],
 				properties: {
 					email: { type: "string", format: "email" },
-					password: { type: "string", minLength: 8 },
-					fullName: { type: "string" },
+					password: {
+						type: "string",
+						minLength: 8,
+						pattern: "^(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$",
+						description:
+							"At least 8 characters, with at least one digit and one special character",
+					},
+					fullName: {
+						type: "string",
+						minLength: 5,
+						description: "Full name must be at least 5 characters long",
+					},
 				},
 			},
 			LoginRequest: {
@@ -80,7 +89,13 @@ const swaggerDefinition: OpenAPIV3.Document = {
 				},
 				responses: {
 					"201": {
-						description: "User created",
+						description: "User created, auth cookie is set",
+						headers: {
+							"Set-Cookie": {
+								description: "HttpOnly auth token cookie",
+								schema: { type: "string" },
+							},
+						},
 						content: {
 							"application/json": {
 								schema: {
