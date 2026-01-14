@@ -16,7 +16,11 @@ export class AuthService {
 		}
 
 		if (!isPasswordStrong(dto.password)) {
-			throw new AppError(400, "Password must contains min 4 symbols, 1 capitalize letter, 1 digit and 1 special symbol");
+			throw new AppError(400, "Password must be at least 8 characters long and contain at least one digit and one special character");
+		}
+
+		if (!dto.fullName || dto.fullName.trim().length < 5) {
+			throw new AppError(400, "Full name must be at least 5 characters long");
 		}
 
 		const existing = await prisma.user.findUnique({

@@ -18,7 +18,7 @@ describe("Auth flows", () => {
 	it("registers user successfully", async () => {
 		const res = await request(app).post("/api/auth/register").send({
 			email: "test@example.com",
-			password: "Qwerty1!",
+			password: "Qwerty123!",
 			fullName: "Test User",
 		});
 
@@ -41,7 +41,7 @@ describe("Auth flows", () => {
 
 		const res = await request(app).post("/api/auth/register").send({
 			email: "test@example.com",
-			password: "Qwerty1!",
+			password: "Qwerty123!",
 			fullName: "Test User",
 		});
 
@@ -61,16 +61,15 @@ describe("Auth flows", () => {
 	});
 
 	it("logs in and sets auth cookie", async () => {
-		// подготовка пользователя
 		await request(app).post("/api/auth/register").send({
 			email: "test@example.com",
-			password: "Qwerty1!",
+			password: "Qwerty123!",
 			fullName: "Test User",
 		});
 
 		const res = await request(app).post("/api/auth/login").send({
 			email: "test@example.com",
-			password: "Qwerty1!",
+			password: "Qwerty123!",
 		});
 
 		expect(res.status).toBe(200);
@@ -80,10 +79,24 @@ describe("Auth flows", () => {
 	it("returns 400 for invalid login credentials", async () => {
 		const res = await request(app).post("/api/auth/login").send({
 			email: "nope@example.com",
-			password: "Wrong123!",
+			password: "Wrong123123!",
 		});
 
 		expect(res.status).toBe(400);
+	});
+
+	it("returns 400 if fullName is too short", async () => {
+		const res = await request(app)
+			.post("/api/auth/register")
+			.send({
+				email: "short-name@example.com",
+				password: "Qwerty123!",
+				fullName: "Abc",
+			});
+
+		expect(res.status).toBe(400);
+		expect(res.body).toHaveProperty("message");
+		expect(String(res.body.message)).toMatch(/full name/i);
 	});
 
 	it("denies access to /api/users without auth", async () => {
@@ -93,49 +106,60 @@ describe("Auth flows", () => {
 	});
 
 	it("returns users list when authorized", async () => {
-		await request(app).post("/api/auth/register").send({
-			email: "test@example.com",
-			password: "Qwerty1!",
+		const registerRes = await request(app).post("/api/auth/register").send({
+			email: "users-list-test@example.com", // можно отдельный email, чтобы точно не пересечься
+			password: "Qwerty123!",
 			fullName: "Test User",
 		});
 
+		expect(registerRes.status).toBe(201);
+
 		const loginRes = await request(app).post("/api/auth/login").send({
-			email: "test@example.com",
-			password: "Qwerty1!",
+			email: "users-list-test@example.com",
+			password: "Qwerty123!",
 		});
 
+		expect(loginRes.status).toBe(200);
+
 		const cookie = loginRes.headers["set-cookie"];
+		expect(cookie).toBeDefined();
 
 		const res = await request(app).get("/api/users").set("Cookie", cookie);
 
 		expect(res.status).toBe(200);
 		expect(Array.isArray(res.body)).toBe(true);
 		expect(res.body[0]).toMatchObject({
-			email: "test@example.com",
+			email: "users-list-test@example.com",
 		});
 	});
+
 
 	it("applies rate limit to login", async () => {
 		await request(app).post("/api/auth/register").send({
 			email: "test@example.com",
-			password: "Qwerty1!",
+			password: "Qwerty123!",
 			fullName: "Test User",
 		});
 
-		// 5 нормальных попыток
 		for (let i = 0; i < 5; i++) {
-			await request(app).post("/api/auth/login").send({
-				email: "test@example.com",
-				password: "Wrong123!",
-			});
+			await request(app)
+				.post("/api/auth/login")
+				.set("x-enable-rate-limit-test", "1")
+				.send({
+					email: "test@example.com",
+					password: "Qwerty123!",
+				});
 		}
 
-		// 6-я должна получить 429
-		const res = await request(app).post("/api/auth/login").send({
-			email: "test@example.com",
-			password: "Wrong123!",
-		});
+		const res = await request(app)
+			.post("/api/auth/login")
+			.set("x-enable-rate-limit-test", "1")
+			.send({
+				email: "test@example.com",
+				password: "Qwerty123!",
+			});
 
 		expect(res.status).toBe(429);
 	});
+
 });
