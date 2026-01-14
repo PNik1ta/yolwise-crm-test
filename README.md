@@ -25,7 +25,7 @@ Minimal CRM-like test project with:
 
 - Next.js (App Router)
 - React
-- Plain CSS (no UI libs)
+- SCSS
 
 ---
 
@@ -54,9 +54,6 @@ yolwise-crm-test/
 - JWT is stored in an **HttpOnly cookie**:
   - Safer than localStorage (no direct JS access)
   - Nice DX for frontend – no need to manually attach token
-- Also supports **Bearer** token in `Authorization` header, which is useful for:
-  - Future integrations
-  - API clients or mobile apps
 
 ---
 
@@ -77,10 +74,6 @@ yolwise-crm-test/
     - rate limiting
     - access control for `/api/users`
   - unit tests for password strength helper
-- This is enough to show how I think about testing strategy:
-  - Critical flows get e2e coverage
-  - Pure logic (helpers/validators) get unit tests
-  - More tests can be added per domain as the CRM grows
 
 ---
 
@@ -109,8 +102,6 @@ npx prisma migrate deploy
 npm run dev
 ```
 
-API will be available at http://localhost:4000
-
 ### Backend scripts
 
 ```bash
@@ -134,7 +125,6 @@ npm install
 npm run dev
 ```
 
-- Frontend: http://localhost:3000
 - `/login` — login/register page
 - / — protected users list + welcome message (Welcome <Full Name>! To logout click here) (redirects to /login if not authenticated)
 
@@ -153,8 +143,6 @@ npm run dev
 ---
 
 ## API Overview
-
-Base URL: `http://localhost:4000`
 
 - `GET /docs` — Swagger UI
 - `POST /api/auth/register` — register user, returns user data and sets HttpOnly cookie token
