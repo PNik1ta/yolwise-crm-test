@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"test:migrate": "dotenv -e .env.test -- npx prisma migrate deploy",
-  		"test": "dotenv -e .env.test -- cross-env NODE_ENV=test jest",
+  		"test": "npx prisma generate && dotenv -e .env.test -- cross-env NODE_ENV=test jest",
 		"lint": "biome check .",
 		"lint:fix": "biome check . --write",
 		"dev": "ts-node-dev src/server.ts",
