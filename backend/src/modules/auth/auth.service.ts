@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
 import { prisma } from "../../config/prisma";
 import { env } from "../../config/env";
 import type { LoginDto, RegisterDto } from "./auth.types";
@@ -61,7 +61,7 @@ export class AuthService {
 		const token = jwt.sign(
 			{ userId: user.id },
 			env.jwtSecret,
-			{ expiresIn: env.jwtExpiresIn },
+			{ expiresIn: env.jwtExpiresIn } as SignOptions,
 		);
 
 		const safeUser = {
