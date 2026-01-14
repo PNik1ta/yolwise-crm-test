@@ -11,9 +11,7 @@ export function authGuard(req: AuthRequest, res: Response, next: NextFunction) {
 		const tokenFromCookie = (req as any).cookies?.token as string | undefined;
 		const authHeader = req.headers.authorization;
 
-		const bearerToken = authHeader?.startsWith("Bearer ")
-			? authHeader.slice(7)
-			: undefined;
+		const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : undefined;
 
 		const token = tokenFromCookie ?? bearerToken;
 

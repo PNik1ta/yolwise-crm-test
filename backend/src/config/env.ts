@@ -1,10 +1,7 @@
 import { config } from "dotenv";
 
 if (!process.env.DATABASE_URL) {
-	const envFile =
-		process.env.NODE_ENV === "test"
-			? ".env.test"
-			: ".env";
+	const envFile = process.env.NODE_ENV === "test" ? ".env.test" : ".env";
 
 	config({ path: envFile });
 }
@@ -24,5 +21,5 @@ export const env = {
 	port: Number(process.env.PORT ?? 4000),
 	databaseUrl,
 	jwtSecret: jwtSecret as string,
-  jwtExpiresIn: (process.env.JWT_EXPIRES_IN ?? "1h") as string,
+	jwtExpiresIn: (process.env.JWT_EXPIRES_IN ?? "1h") as string,
 };

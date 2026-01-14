@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
-import jwt, { SignOptions } from "jsonwebtoken";
-import { prisma } from "../../config/prisma";
+import jwt, { type SignOptions } from "jsonwebtoken";
 import { env } from "../../config/env";
-import type { LoginDto, RegisterDto } from "./auth.types";
+import { prisma } from "../../config/prisma";
 import { AppError, assertRequiredFields, isEmailValid, isPasswordStrong } from "../../utils";
+import type { LoginDto, RegisterDto } from "./auth.types";
 
 const SALT_ROUNDS = 10;
 
@@ -16,10 +16,7 @@ export class AuthService {
 		}
 
 		if (!isPasswordStrong(dto.password)) {
-			throw new AppError(
-				400,
-				"Password does not meet complexity requirements"
-			);
+			throw new AppError(400, "Password does not meet complexity requirements");
 		}
 
 		const existing = await prisma.user.findUnique({
@@ -70,11 +67,9 @@ export class AuthService {
 			throw new AppError(400, "Invalid email or password");
 		}
 
-		const token = jwt.sign(
-			{ userId: user.id },
-			env.jwtSecret,
-			{ expiresIn: env.jwtExpiresIn } as SignOptions,
-		);
+		const token = jwt.sign({ userId: user.id }, env.jwtSecret, {
+			expiresIn: env.jwtExpiresIn,
+		} as SignOptions);
 
 		const safeUser = {
 			id: user.id,

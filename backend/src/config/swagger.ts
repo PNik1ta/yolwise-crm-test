@@ -1,13 +1,12 @@
-import { env } from "./env";
 import type { OpenAPIV3 } from "openapi-types";
+import { env } from "./env";
 
 const swaggerDefinition: OpenAPIV3.Document = {
 	openapi: "3.0.0",
 	info: {
 		title: "Yolwise CRM Test API",
 		version: "1.0.0",
-		description:
-			"Simple CRM test API with auth (register/login) and users list.",
+		description: "Simple CRM test API with auth (register/login) and users list.",
 	},
 	servers: [
 		{
@@ -162,10 +161,7 @@ const swaggerDefinition: OpenAPIV3.Document = {
 			get: {
 				summary: "Get all users (protected)",
 				tags: ["Users"],
-				security: [
-					{ cookieAuth: [] },
-					{ bearerAuth: [] },
-				],
+				security: [{ cookieAuth: [] }, { bearerAuth: [] }],
 				responses: {
 					"200": {
 						description: "List of users",
