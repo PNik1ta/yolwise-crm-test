@@ -28,7 +28,7 @@ describe("Auth flows", () => {
 			fullName: "Test User",
 		});
 		expect(res.body).not.toHaveProperty("passwordHash");
-		expect(res.headers["set-cookie"]).toBeDefined(); // 🔥 теперь и это
+		expect(res.headers["set-cookie"]).toBeDefined();
 	});
 
 	it("rejects duplicate email on register", async () => {
@@ -108,7 +108,7 @@ describe("Auth flows", () => {
 
 	it("returns users list when authorized", async () => {
 		const registerRes = await request(app).post("/api/auth/register").send({
-			email: "users-list-test@example.com", // можно отдельный email, чтобы точно не пересечься
+			email: "users-list-test@example.com",
 			password: "Qwerty123!",
 			fullName: "Test User",
 		});
