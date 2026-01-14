@@ -55,25 +55,14 @@ export default function LoginPage() {
 			<div className="auth-card">
 				<h2>{mode === "login" ? "Login" : "Register"}</h2>
 
-				<button
-					type="button"
-					className="mode-toggle"
-					onClick={toggleMode}
-				>
-					{mode === "login"
-						? "Need an account? Register"
-						: "Already have an account? Login"}
+				<button type="button" className="mode-toggle" onClick={toggleMode}>
+					{mode === "login" ? "Need an account? Register" : "Already have an account? Login"}
 				</button>
 
 				<form className="auth-form" onSubmit={handleSubmit}>
 					<label className="form-field">
 						<span>Email</span>
-						<input
-							type="email"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							required
-						/>
+						<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 					</label>
 
 					{mode === "register" && (
@@ -101,11 +90,7 @@ export default function LoginPage() {
 					{error && <p className="error-text">{error}</p>}
 
 					<button className="primary-btn" type="submit" disabled={loading}>
-						{loading
-							? "Please wait..."
-							: mode === "login"
-								? "Login"
-								: "Register"}
+						{loading ? "Please wait..." : mode === "login" ? "Login" : "Register"}
 					</button>
 				</form>
 			</div>

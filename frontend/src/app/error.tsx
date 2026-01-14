@@ -29,9 +29,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps): ReactEl
 								</a>
 							</div>
 
-							<p className="error-details">
-								{error.message}
-							</p>
+							<p className="error-details">{error.message}</p>
 						</section>
 					</main>
 				</div>
