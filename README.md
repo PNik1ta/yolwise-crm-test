@@ -72,6 +72,7 @@ API will be available at http://localhost:4000
 npm run dev       # dev server
 npm run build     # build TS -> dist
 npm start         # run built server
+npm run test:migrate # should be used before running npm test once to generate prisma client
 npm test          # tests (Jest + supertest)
 npm run lint      # Biome check
 npm run lint:fix  # Biome autofix
@@ -123,3 +124,4 @@ Auth endpoints are rate-limited.
 
 - Tests use a separate Postgres schema (configured via .env.test).
 - Frontend talks to backend with `credentials: "include"` to send HttpOnly cookies.
+

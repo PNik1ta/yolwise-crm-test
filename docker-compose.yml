@@ -19,5 +19,16 @@ services:
     depends_on:
       - db
 
+  frontend:
+    build: ./frontend
+    container_name: yolwise-frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/.env.docker
+    depends_on:
+      - api
+
+
 volumes:
   yolwise_pg_data:
